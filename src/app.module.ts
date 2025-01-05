@@ -19,7 +19,7 @@ import { Organization } from './Entities/OrganisationEntity';
       password: '',
       database: 'Online_db',
       entities: [User, Organization],
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     
