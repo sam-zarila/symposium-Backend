@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthenticationModule } from './authentication/authentication.module';
+
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Authentication } from './authentication/entities/authentication.entity';
+import { AuthModule } from './auth/auth.module';
+
 
 @Module({
   
@@ -15,11 +16,12 @@ import { Authentication } from './authentication/entities/authentication.entity'
       username: 'root',
       password: '',
       database: 'Online_db',
-      entities: [Authentication],
+      entities: [],
       synchronize: true,
     }),
+    AuthModule,
     
-    AuthenticationModule],
+    ],
   controllers: [AppController],
   providers: [AppService],
 })
