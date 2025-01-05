@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { User } from './Entities/UserEntity';
+import { Organization } from './Entities/OrganisationEntity';
 
 
 @Module({
@@ -16,7 +18,7 @@ import { AuthModule } from './auth/auth.module';
       username: 'root',
       password: '',
       database: 'Online_db',
-      entities: [],
+      entities: [User, Organization],
       synchronize: true,
     }),
     AuthModule,
