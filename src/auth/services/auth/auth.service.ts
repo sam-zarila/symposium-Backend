@@ -1,3 +1,5 @@
+// src/auth/services/auth.service.ts
+
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
@@ -5,32 +7,35 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/Entities/UserEntity';
 import { Organization } from 'src/Entities/OrganisationEntity';
-
+import { RegisterDto } from 'src/DTOs/register';
+;
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Organization)
-    private orgRepository: Repository<Organization>,
+    @InjectRepository(Organization) private orgRepository: Repository<Organization>,
     private jwtService: JwtService,
   ) {}
 
-  async register(data: { name: string; email: string; password: string; orgName: string }) {
+  // Registration logic
+  async register(data: RegisterDto) {
     const { name, email, password, orgName } = data;
 
-    // Check if organization exists
+    // Check if the organization exists
     const orgExists = await this.orgRepository.findOne({ where: { name: orgName } });
     if (orgExists) {
       throw new Error('Organization already exists.');
     }
 
-    // Create organization
+    // Create the organization if it doesn't exist
     const organization = this.orgRepository.create({ name: orgName });
     await this.orgRepository.save(organization);
 
-    // Create user
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create the user
     const user = this.userRepository.create({
       name,
       email,
@@ -43,12 +48,13 @@ export class AuthService {
     return { message: 'Registration successful.' };
   }
 
+  // Login logic
   async login(data: { email: string; password: string }) {
     const { email, password } = data;
 
     const user = await this.userRepository.findOne({
       where: { email },
-      relations: ['organization'],
+      relations: ['organization'],  // Include organization details
     });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
