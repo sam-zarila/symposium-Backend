@@ -11,7 +11,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  @ApiBody({ type: RegisterDto })  // Swagger request body
+  @ApiBody({ type: RegisterDto })  
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
