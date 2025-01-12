@@ -13,10 +13,22 @@ export class ScreenService {
         const user = await this.userRepository.findOne({where:{id:userId}});
 
         return {
-            organizationName:user?.organization?.name
-            
-        }
+            organizationName:user?.organization?.name,
+            role:user?.role
+            service:
 
-    }
+            
+        };
+         }
+
+         private getAvailableServices(role: string) {
+            const services = {
+              hr: ['Performance Evaluation'],
+              accountant: ['Expenditure Analysis', 'Budget Prediction'],
+              admin: ['Real-Time Financial Monitoring', 'Performance Evaluation', 'Budget Prediction'],
+            };
+        
+            return services[role] || [];
+          }
     
 }
