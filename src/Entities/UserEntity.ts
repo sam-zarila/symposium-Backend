@@ -22,6 +22,13 @@ export class User{
     @Column()
     password: string;
 
+    @ApiProperty({
+        description: "Role of the user (e.g., Admin, HR, Accountant)",
+        example: "Admin",
+      })
+      @Column({ type: "enum", enum: ["Admin", "HR", "Accountant"], default: "Admin" })
+      role: "Admin" | "HR" | "Accountant";
+
     @ManyToOne(() => Organization, (organisation) => organisation.users )
     organization:Organization;
 

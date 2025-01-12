@@ -28,6 +28,10 @@ export class RegisterDto {
   @IsNotEmpty()
   password: string;
 
+  @IsString()
+  @IsNotEmpty()
+  role: string;
+
   @ApiProperty({
     description: 'Organization name',
     example: 'TechCorp',
