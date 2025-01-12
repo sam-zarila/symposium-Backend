@@ -14,8 +14,8 @@ export class ScreenService {
 
         return {
             organizationName:user?.organization?.name,
-            role:user?.role
-            service:
+            role:user?.role,
+            service: this.getAvailableServices(user.role),
 
             
         };
