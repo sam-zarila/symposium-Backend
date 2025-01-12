@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { User } from './Entities/UserEntity';
 import { Organization } from './Entities/OrganisationEntity';
+import { ScreenModule } from './screen/screen.module';
 
 
 @Module({
@@ -22,6 +23,7 @@ import { Organization } from './Entities/OrganisationEntity';
       synchronize: false,
     }),
     AuthModule,
+    ScreenModule,
     
     ],
   controllers: [AppController],
