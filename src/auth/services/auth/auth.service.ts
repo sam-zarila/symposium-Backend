@@ -1,5 +1,3 @@
-// src/auth/services/auth.service.ts
-
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
@@ -8,7 +6,6 @@ import * as bcrypt from 'bcrypt';
 import { User } from 'src/Entities/UserEntity';
 import { Organization } from 'src/Entities/OrganisationEntity';
 import { RegisterDto } from 'src/DTOs/register';
-;
 
 @Injectable()
 export class AuthService {
@@ -20,7 +17,7 @@ export class AuthService {
 
   // Registration logic
   async register(data: RegisterDto) {
-    const { name, email, password, orgName } = data;
+    const { name, email, password, orgName, role } = data; // Include role in DTO
 
     // Check if the organization exists
     const orgExists = await this.orgRepository.findOne({ where: { name: orgName } });
@@ -40,6 +37,7 @@ export class AuthService {
       name,
       email,
       password: hashedPassword,
+      role: role as 'Admin' | 'HR' | 'Accountant',
       organization,
     });
 
@@ -54,7 +52,7 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where: { email },
-      relations: ['organization'],  // Include organization details
+      relations: ['organization'], // Include organization details
     });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -64,11 +62,13 @@ export class AuthService {
     const payload = {
       id: user.id,
       email: user.email,
+      role: user.role, // Include role in the payload
       orgId: user.organization.id,
     };
 
     return {
       accessToken: this.jwtService.sign(payload),
+      role: user.role, // Include role in the response
       message: 'Login successful.',
     };
   }
